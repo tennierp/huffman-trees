@@ -6,7 +6,7 @@ ID: 008768156
 https://github.com/tennierp/huffman-trees
 
 ## Collaboration & Sources
-Dr. Ali A. Kooshesh provided the foundational building blocks to create a scanner and tokenization classes, 
+Dr. Ali A. Kooshesh provided the foundational building blocks to create the scanner and token classes, 
 which tokenize text files into .tokens files, separating content by words.
 
 ## Implementation Details
@@ -15,7 +15,7 @@ which tokenize text files into .tokens files, separating content by words.
 In this project, text will be tokenized, word frequencies will be counted, a Huffman tree will be constructed 
 using the counts, a codebook will be created, and text will be encoded and decoded.
 
-For Part 1 we have a scanner that can read .txt files with chapters of words that will then be tokenized into 
+For Part 1 we have a scanner class that can read .txt files with chapters of words that will then be tokenized into 
 a separate .tokens file with the rules given to the tokenize functions. These rules include lowercasing all word 
 tokens, and treating digits, numbers, whitespaces, punctuation and symbols as separators. Apostrophes will have 
 a unique case allowing words such as "camp's", but if the apostrophe doesn't have a character after it, it will be 
