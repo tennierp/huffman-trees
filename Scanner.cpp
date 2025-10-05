@@ -2,6 +2,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "utils.hpp"
 
@@ -24,10 +25,6 @@ error_type Scanner::tokenize(std::vector<std::string>& words) {
         token = readWord(infile);
     }
 
-    return NO_ERROR;
-}
-
-error_type Scanner::tokenize(std::vector<std::string> &words, const std::filesystem::path &outputFile) {
     return NO_ERROR;
 }
 
