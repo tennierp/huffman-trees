@@ -102,14 +102,14 @@ int main(int argc, char *argv[]) {
 
     PriorityQueue pq(nodes);
 
+    // clean up before exiting
     std::ofstream out(freqFileName);
     if (!out) {
-        // clean up before exiting
         for (TreeNode* n : nodes) delete n;
         exitOnError(UNABLE_TO_OPEN_FILE_FOR_WRITING, freqFileName);
     }
 
-    pq.print(out); // your simple print: "freq word\n" per line
+    pq.print(out);
 
     return 0;
 }

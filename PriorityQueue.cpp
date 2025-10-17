@@ -1,13 +1,8 @@
-//
-// Created by Parker Tennier on 10/17/25.
-//
-
 #include "PriorityQueue.hpp"
 
 PriorityQueue::PriorityQueue(std::vector<TreeNode *> nodes) {
     items_ = nodes;
 
-    // Insertion sort using swaps
     for (size_t i = 1; i < items_.size(); ++i) {
         for (size_t j = i; j > 0 && higherPriority(items_[j], items_[j-1]); j--) {
             TreeNode* temp = items_.at(j);

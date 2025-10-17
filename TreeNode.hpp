@@ -2,13 +2,12 @@
 #include <string>
 
 struct TreeNode {
-    std::string word;      // the actual word (for leaves)
-    std::string key_word;  // representative word for ordering
-    int freq;              // count/frequency
+    std::string word;
+    std::string key_word;
+    int freq;
     TreeNode* left;
     TreeNode* right;
 
-    // Constructor for leaf nodes (from BST)
     TreeNode(const std::string& w, int f) {
         word = w;
         key_word = w;
@@ -17,7 +16,6 @@ struct TreeNode {
         right = nullptr;
     }
 
-    // Constructor for internal nodes (for Huffman - not used in Part 2)
     TreeNode(TreeNode* l, TreeNode* r, int f, const std::string& kw) {
         word = "";
         key_word = kw;
