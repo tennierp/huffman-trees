@@ -3,8 +3,11 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <optional>
 #include "Scanner.hpp"
 #include "utils.hpp"
+#include "BinSearchTree.hpp"
+#include "PriorityQueue.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -14,18 +17,18 @@ int main(int argc, char *argv[]) {
     }
 
     const std::string dirName = std::string("input_output");
-    const std::string inputFileName = std::string(argv[1]);
-    const std::string inputFileBaseName = baseNameWithoutTxt(inputFileName);
+    const std::string inputFileNameArg = std::string(argv[1]);
+    const std::string inputFileName = dirName + "/" + inputFileNameArg;
+    const std::string inputFileBaseName = baseNameWithoutTxt(inputFileNameArg);
 
     // build the path to the .tokens output file.
     const std::string wordTokensFileName = dirName + "/" + inputFileBaseName + ".tokens";
-
+    const std::string freqFileName = dirName + "/" + inputFileBaseName + ".freq";
 
     // The next several if-statement make sure that the input file, the directory exist
     // and that the output file is writeable.
      if( error_type status; (status = regularFileExistsAndIsAvailable(inputFileName)) != NO_ERROR )
         exitOnError(status, inputFileName);
-
 
     if (error_type status; (status = directoryExists(dirName)) != NO_ERROR )
         exitOnError(status, dirName);
@@ -33,6 +36,8 @@ int main(int argc, char *argv[]) {
     if (error_type status; (status = canOpenForWriting(wordTokensFileName)) != NO_ERROR)
         exitOnError(status, wordTokensFileName);
 
+    if (error_type status; (status = canOpenForWriting(freqFileName)) != NO_ERROR)
+        exitOnError(status, freqFileName);
 
     std::vector<std::string> words;
     namespace fs = std::filesystem;
@@ -44,6 +49,67 @@ int main(int argc, char *argv[]) {
 
     if (error_type status; (status = writeVectorToFile(wordTokensFileName, words)) != NO_ERROR)
         exitOnError(status, wordTokensFileName);
+
+
+    // Build the tree
+    BinSearchTree bst;
+    bst.bulkInsert(words);
+
+    std::vector<std::pair<std::string, int>> frequencies;
+    bst.inorderCollect(frequencies);
+
+    size_t totalTokens = words.size();
+    size_t uniqueWords = bst.size();
+    unsigned bstHeight = bst.height();
+
+    int minFreq = 0;
+    int maxFreq = 0;
+
+    if (!frequencies.empty()) {
+        minFreq = frequencies.at(0).second;
+        maxFreq = frequencies.at(0).second;
+
+        for (size_t i = 0; i < frequencies.size(); ++i) {
+            std::string word = frequencies.at(i).first;
+            int count = frequencies.at(i).second;
+
+            if (count < minFreq) {
+                minFreq = count;
+            }
+
+            if (count > maxFreq) {
+                maxFreq = count;
+            }
+        }
+    }
+
+    // Print exactly as specified
+    std::cout << "BST height: " << bstHeight << '\n';
+    std::cout << "BST unique words: " << uniqueWords << '\n';
+    std::cout << "Total tokens: " << totalTokens << '\n';
+    std::cout << "Min frequency: " << minFreq << '\n';
+    std::cout << "Max frequency: " << maxFreq << '\n';
+
+    //Priority Queue
+    std::vector<TreeNode*> nodes;
+
+    for (size_t i = 0; i < frequencies.size(); ++i) {
+        std::string word = frequencies.at(i).first;
+        int count = frequencies.at(i).second;
+
+        nodes.push_back(new TreeNode(word, count));
+    }
+
+    PriorityQueue pq(nodes);
+
+    std::ofstream out(freqFileName);
+    if (!out) {
+        // clean up before exiting
+        for (TreeNode* n : nodes) delete n;
+        exitOnError(UNABLE_TO_OPEN_FILE_FOR_WRITING, freqFileName);
+    }
+
+    pq.print(out); // your simple print: "freq word\n" per line
 
     return 0;
 }
