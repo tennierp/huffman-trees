@@ -6,25 +6,21 @@ ID: 008768156
 https://github.com/tennierp/huffman-trees
 
 ## Collaboration & Sources
-Dr. Ali A. Kooshesh provided the foundational building blocks to create a scanner and tokenization classes, 
-which tokenize text files into .tokens files, separating content by words.
+Dr. Ali A. Kooshesh provided the foundational building blocks (Scanner, BinSearchTree, PriorityQueue, Utils) and scripts to run the project on blue.
 
 ## Implementation Details
-(Updated for part 2 -- this will continue to be updated until project finished.)
+This project is a fully functional Huffman Tree. It will take any ‘.txt’ file as an input and parse it into four separate files: `.tokens`, `.freq`, `.hdr`, and `.code`. 
+The program reads in the input text and separates it into lowercase tokens. Tokens include only the letters and necessary apostrophes, 
+and each token is written on its own line in the `.tokens` file. Each inque word is inserted into a Binary Search tree that uses a frequency 
+to track how many times each word appears in the `.txt` file. The frequencies are then written into the `.freq` file, and sorted by a descending 
+frequency. If two words have the same frequency, they are ordered alphabetically. Each line in this file shows the frequency followed by the 
+word (it is also right-aligned with width 10). Once all word counts are gathered, a Huffman tree is built using a priority queue. Each leaf 
+node represents a word and its own frequency. The Huffman tree uses an algorithm to assign `0` and `1` bits to specific nodes to Encode the 
+provided `.txt` file given.
 
-In this project, text will be tokenized, word frequencies will be counted, a Huffman tree will be constructed 
-using the counts, a codebook will be created, and text will be encoded and decoded.
-
-For Part 1 we have a scanner that can read .txt files with chapters of words that will then be tokenized into 
-a separate .tokens file with the rules given to the tokenize functions. These rules include lowercasing all word 
-tokens, and treating digits, numbers, whitespaces, punctuation and symbols as separators. Apostrophes will have 
-a unique case allowing words such as "camp's", but if the apostrophe doesn't have a character after it, it will be 
-treated as a separator.
-
-For Part 2, we have created a frequency counting and sorting. After the file has been tokenized,
-we build a Binary Search Tree (BST) to count word frequencies with an O(log n) average insertion time.
-The BST performs an in-order traversal to create a sorted list of word & count pairs. We then use the
-PriorityQueue class based on a sorted vector to order the words by frequency in a decending order. The program then outputs a .freq file that contains the frequency count and word pairs. The program will also output into the terminal the BST Height, Unique word count, total token count, minimum frequency, and maximum frequency.
 
 ## Testing & Status
-Using g++ -std=c++20 -Wall *.cpp -o huffman_part1 and then running the code with ./huffman_part2 input_file_name.txt. The program now generates two output files: .tokens and .freq. Testing this on the blue server using the provided test script (compile_and_test_project3_part2.bash) shows all 11 test files passing with 22 matches and 0 differences when compared to Dr. Ali. A. Kooshesh's outputs. All BST properties print correctly to the terminal when the program is ran.
+Using g++ -std=c++20 -Wall *.cpp -o huffman and then running the program with ./huffman input_file_name.txt. The program now generates four output 
+files: .tokens, .freq .code, .hdr. Testing this on the blue server using the final test scripts provided by Dr. Ali Kooshesh shows all test files 
+passing with 44 matches and 0 differences when compared to Dr. Ali. A. Kooshesh's outputs. All BST properties, Total Tokens, and Min/Max frequencies print 
+correctly to the terminal when the program is run.
