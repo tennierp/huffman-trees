@@ -2,7 +2,9 @@
 #include "TreeNode.hpp"
 #include <string>
 #include <vector>
+#include <string_view>
 #include <optional>
+#include <algorithm>
 
 class BinSearchTree {
 public:

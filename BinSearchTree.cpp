@@ -1,4 +1,6 @@
 #include "BinSearchTree.hpp"
+#include "TreeNode.hpp"
+#include <algorithm>
 
 BinSearchTree::~BinSearchTree() {
     destroy(root_);

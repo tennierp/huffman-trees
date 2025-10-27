@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+// TreeNode struct using words, key_words, and frequencies data
 struct TreeNode {
     std::string word;
     std::string key_word;

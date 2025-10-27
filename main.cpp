@@ -8,6 +8,7 @@
 #include "utils.hpp"
 #include "BinSearchTree.hpp"
 #include "PriorityQueue.hpp"
+#include "HuffmanTree.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -50,7 +51,6 @@ int main(int argc, char *argv[]) {
     if (error_type status; (status = writeVectorToFile(wordTokensFileName, words)) != NO_ERROR)
         exitOnError(status, wordTokensFileName);
 
-
     // Build the tree
     BinSearchTree bst;
     bst.bulkInsert(words);
@@ -83,7 +83,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Print exactly as specified
     std::cout << "BST height: " << bstHeight << '\n';
     std::cout << "BST unique words: " << uniqueWords << '\n';
     std::cout << "Total tokens: " << totalTokens << '\n';
@@ -110,6 +109,45 @@ int main(int argc, char *argv[]) {
     }
 
     pq.print(out);
+    out.close();
 
+    // Clean up the nodes used for printing frequencies
+    for (TreeNode* n : nodes) {
+        delete n;
+    }
+    nodes.clear();
+
+    HuffmanTree huffTree;
+    huffTree.buildFromCounts(frequencies);
+
+    const std::string hdrFileName = dirName + "/" + inputFileBaseName + ".hdr";
+    if (error_type status; (status = canOpenForWriting(hdrFileName)) != NO_ERROR)
+        exitOnError(status, hdrFileName);
+
+    std::ofstream hdrOut(hdrFileName);
+    if (!hdrOut) {
+        exitOnError(UNABLE_TO_OPEN_FILE_FOR_WRITING, hdrFileName);
+    }
+
+    if (error_type status; (status = huffTree.writeHeader(hdrOut)) != NO_ERROR) {
+        exitOnError(status, hdrFileName);
+    }
+    hdrOut.close();
+
+    // Encode and write .code file
+    const std::string codeFileName = dirName + "/" + inputFileBaseName + ".code";
+    if (error_type status; (status = canOpenForWriting(codeFileName)) != NO_ERROR)
+        exitOnError(status, codeFileName);
+
+    std::ofstream codeOutput(codeFileName);
+    if (!codeOutput) {
+        exitOnError(UNABLE_TO_OPEN_FILE_FOR_WRITING, codeFileName);
+    }
+
+    if (error_type status; (status = huffTree.encode(words, codeOutput, 80)) != NO_ERROR) {
+        exitOnError(status, codeFileName);
+    }
+
+    codeOutput.close();
     return 0;
 }
