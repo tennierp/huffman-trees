@@ -6,17 +6,18 @@ ID: 008768156
 https://github.com/tennierp/huffman-trees
 
 ## Collaboration & Sources
-Dr. Ali A. Kooshesh provided the foundational building blocks (Scanner, BinSearchTree, PriorityQueue, Utils) and scripts to run the project on blue.
+Dr. Ali A. Kooshesh provided the foundational building blocks (Scanner, BinSearchTree, PriorityQueue, and Utils) and scripts to run the project on blue.
 
 ## Implementation Details
-This project is a fully functional Huffman Tree. It will take any ‘.txt’ file as an input and parse it into four separate files: `.tokens`, `.freq`, `.hdr`, and `.code`. 
-The program reads in the input text and separates it into lowercase tokens. Tokens include only the letters and necessary apostrophes, 
-and each token is written on its own line in the `.tokens` file. Each inque word is inserted into a Binary Search tree that uses a frequency 
-to track how many times each word appears in the `.txt` file. The frequencies are then written into the `.freq` file, and sorted by a descending 
-frequency. If two words have the same frequency, they are ordered alphabetically. Each line in this file shows the frequency followed by the 
-word (it is also right-aligned with width 10). Once all word counts are gathered, a Huffman tree is built using a priority queue. Each leaf 
-node represents a word and its own frequency. The Huffman tree uses an algorithm to assign `0` and `1` bits to specific nodes to Encode the 
-provided `.txt` file given.
+This project is a fully functional Huffman Tree. It takes any `.txt` file as input and parses it into four separate files: `.tokens`, `.freq`, `.hdr`, and `.code`.
+
+The program reads the input text and separates it into lowercase tokens. Tokens include only characters and the necessary apostrophes, and each token is written on 
+its own line in the `.tokens` file. Each unique word is inserted into a Binary Search Tree that tracks how many times each word appears in the input text. The frequencies 
+are then written to the `.freq` file and sorted by descending frequency. If two words have the same frequency, they are ordered alphabetically. Each line in this file 
+shows the frequency followed by the word (right-aligned with width 10). Once all the word counts are found, a Huffman Tree is built using a priority queue. The `.hdr` 
+file is generated using an algorithm from the Huffman Tree built, listing each word followed by its binary code. The `.code` file contains the full encoded bits for the text, 
+made with `0` and `1` bits. The program uses the error types defined in `utils.hpp` for file handling.
+
 
 
 ## Testing & Status
