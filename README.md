@@ -6,25 +6,46 @@ A C++ implementation of word-level Huffman coding. Takes any `.txt` file as inpu
 
 The program runs in four stages:
 
-1. **Tokenize** — Reads the input text and splits it into lowercase tokens (letters and apostrophes only), one per line, written to `.tokens`.
-2. **Count frequencies** — Inserts each unique token into a Binary Search Tree that tracks occurrence counts. Frequencies are written to `.freq`, sorted by descending frequency with alphabetical tie-breaking, right-aligned to width 10.
-3. **Build the Huffman tree** — Constructs the tree from the frequency data using a priority queue, then walks the tree to assign a binary code to each token. The token-to-code mapping is written to `.hdr`.
-4. **Encode** — Emits the full encoded bitstream as a sequence of `0` and `1` characters to `.code`.
+1. **Tokenize** — A custom `Scanner` reads the input character by character, lowercasing letters and preserving internal apostrophes (so `Poe's` becomes `poe's`, but a stray quote mark won't start a token). One token per line is written to `.tokens`.
+2. **Count frequencies** — Tokens are inserted into a `BinSearchTree` keyed by word, with each node tracking its count. An inorder traversal yields words in alphabetical order — which doubles as the tie-breaker for the next stage. Frequencies are written to `.freq`, sorted by descending count with alphabetical ties, right-aligned to width 10.
+3. **Build the Huffman tree** — A min-heap `PriorityQueue` repeatedly extracts the two lowest-frequency nodes and merges them, with the alphabetically-smaller key propagated up to keep tie-breaking deterministic. The token-to-code mapping is then walked out preorder and written to `.hdr`.
+4. **Encode** — Each input token is replaced with its bitstring and emitted to `.code`, wrapped at 80 columns.
 
-File I/O errors are handled through the error types defined in `utils.hpp`.
+File I/O is gated by an `error_type` enum defined in `utils.hpp`, so every read/write goes through a consistent existence-and-permissions check before opening.
 
 ## Build and run
 
 ```bash
 g++ -std=c++20 -Wall *.cpp -o huffman
-./huffman input.txt
+./huffman TheBells.txt
 ```
 
-This produces `input.tokens`, `input.freq`, `input.hdr`, and `input.code` alongside the input file. The program also prints BST properties, total token count, and min/max frequencies to the terminal.
+Input files live in `input_output/`, and all four output files are written there alongside the input. The program also prints summary statistics to the terminal:
+
+```
+BST height: 11
+BST unique words: 48
+Total tokens: 82
+Min frequency: 1
+Max frequency: 11
+```
+
+## Example
+
+Running on Poe's *The Bells* (`input_output/TheBells.txt`) produces:
+
+```
+TheBells.tokens          TheBells.freq         TheBells.hdr        TheBells.code
+edgar                    11 bells              sledges 000000      0110100111100010...
+allan                    11 the                silver 000001       0010011011111100...
+poe's                    4 of                  of 0001             0010111110001100...
+the                      3 a                   ...                 ...
+bells                    3 time
+```
 
 ## Testing
 
-Validated against a reference test suite of 44 cases covering tokenization, frequency ordering, header generation, and encoding output. All cases pass with zero diffs against expected outputs.
+Validated against a reference test suite of 44 cases covering tokenization, frequency ordering, header generation, and encoded output. All cases pass with zero diffs against expected outputs.
 
 ## Related
 
