@@ -1,27 +1,31 @@
-## Project 3 - Huffman Trees
+# Huffman Trees
 
-## Student Information
-Parker Tennier  
-ID: 008768156  
-https://github.com/tennierp/huffman-trees
+A C++ implementation of word-level Huffman coding. Takes any `.txt` file as input and produces a complete encoder pipeline: tokenized text, frequency analysis, a Huffman code table, and the final encoded bitstream.
 
-## Collaboration & Sources
-Dr. Ali A. Kooshesh provided the foundational building blocks (Scanner, BinSearchTree, PriorityQueue, and Utils) and scripts to run the project on blue.
+## How it works
 
-## Implementation Details
-This project is a fully functional Huffman Tree. It takes any `.txt` file as input and parses it into four separate files: `.tokens`, `.freq`, `.hdr`, and `.code`.
+The program runs in four stages:
 
-The program reads the input text and separates it into lowercase tokens. Tokens include only characters and the necessary apostrophes, and each token is written on 
-its own line in the `.tokens` file. Each unique word is inserted into a Binary Search Tree that tracks how many times each word appears in the input text. The frequencies 
-are then written to the `.freq` file and sorted by descending frequency. If two words have the same frequency, they are ordered alphabetically. Each line in this file 
-shows the frequency followed by the word (right-aligned with width 10). Once all the word counts are found, a Huffman Tree is built using a priority queue. The `.hdr` 
-file is generated using an algorithm from the Huffman Tree built, listing each word followed by its binary code. The `.code` file contains the full encoded bits for the text, 
-made with `0` and `1` bits. The program uses the error types defined in `utils.hpp` for file handling.
+1. **Tokenize** — Reads the input text and splits it into lowercase tokens (letters and apostrophes only), one per line, written to `.tokens`.
+2. **Count frequencies** — Inserts each unique token into a Binary Search Tree that tracks occurrence counts. Frequencies are written to `.freq`, sorted by descending frequency with alphabetical tie-breaking, right-aligned to width 10.
+3. **Build the Huffman tree** — Constructs the tree from the frequency data using a priority queue, then walks the tree to assign a binary code to each token. The token-to-code mapping is written to `.hdr`.
+4. **Encode** — Emits the full encoded bitstream as a sequence of `0` and `1` characters to `.code`.
 
+File I/O errors are handled through the error types defined in `utils.hpp`.
 
+## Build and run
 
-## Testing & Status
-Using g++ -std=c++20 -Wall *.cpp -o huffman and then running the program with ./huffman input_file_name.txt. The program now generates four output 
-files: .tokens, .freq .code, .hdr. Testing this on the blue server using the final test scripts provided by Dr. Ali Kooshesh shows all test files 
-passing with 44 matches and 0 differences when compared to Dr. Ali. A. Kooshesh's outputs. All BST properties, Total Tokens, and Min/Max frequencies print 
-correctly to the terminal when the program is run.
+```bash
+g++ -std=c++20 -Wall *.cpp -o huffman
+./huffman input.txt
+```
+
+This produces `input.tokens`, `input.freq`, `input.hdr`, and `input.code` alongside the input file. The program also prints BST properties, total token count, and min/max frequencies to the terminal.
+
+## Testing
+
+Validated against a reference test suite of 44 cases covering tokenization, frequency ordering, header generation, and encoding output. All cases pass with zero diffs against expected outputs.
+
+## Related
+
+A companion decoder that reverses this pipeline (`.hdr` + `.code` → original `.tokens`) lives in [huffman-tree-decoder](https://github.com/tennierp/huffman-tree-decoder).
